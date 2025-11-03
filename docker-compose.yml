@@ -1,0 +1,46 @@
+networks:
+  mantis-network:
+    name: mantis-network
+    driver: bridge
+
+services:
+  mantisbt:
+    image: xlrl/mantisbt:latest
+    container_name: mantisbt
+    env_file: .env
+    environment:
+      MANTIS_ENABLE_ADMIN: 1
+      MANTIS_DB_TYPE: mysqli
+      MANTIS_DB_HOST: mysql
+      MANTIS_DB_NAME: ${MYSQL_DATABASE}
+      MANTIS_DB_USER: ${MYSQL_USER}
+      MANTIS_DB_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "80:80"
+    depends_on:
+      - mysql
+    networks:
+      - mantis-network
+    volumes:
+      - ./config:/var/www/html/config
+      # - ./custom:/var/www/html/custom
+      # - ./plugins:/var/www/html/plugins
+      # - ./files:/var/www/html/files
+    restart: always
+
+  mysql:
+    image: "mysql"
+    container_name: mysqldb
+    restart: "always"
+    volumes:
+      - "./storage/mysql:/var/lib/mysql"
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - mantis-network
+    expose:
+      - ${MYSQL_DB_PORT}
