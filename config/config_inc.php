@@ -38,6 +38,7 @@ $g_db_use_ssl = true;
 
 // Resto de configuración leída desde entorno
 $g_default_timezone = 'America/Argentina/Jujuy';
+$g_path = env_var('APP_URL');
 
 // Email por SMTP desde entorno
 $g_allow_signup = ON;
