@@ -44,12 +44,14 @@ $g_path = env_var('APP_URL');
 $g_allow_signup = ON;
 $g_enable_email_notification = ON;
 $g_phpMailer_method = PHPMAILER_METHOD_SMTP;
-$g_smtp_host = 'smtp.gmail.com';
-$g_smtp_connection_mode = 'tls';
-$g_smtp_port = 587;
+
+$g_smtp_host = env_var('SMTP_HOST');
+$g_smtp_port = (int) env_var('SMTP_PORT');
+$g_smtp_connection_mode = env_var('SMTP_MODE', 'tls'); // 'tls' o 'ssl'
 $g_smtp_username = env_var('SMTP_USER');
 $g_smtp_password = env_var('SMTP_PASS');
-$g_administrator_email = env_var('SMTP_USER');
+$g_administrator_email = env_var('SMTP_FROM', $g_smtp_username);
+
 
 // Logs y acceso
 $g_log_level = LOG_EMAIL | LOG_EMAIL_RECIPIENT | LOG_FILTERING | LOG_AJAX;
