@@ -3,7 +3,7 @@ TP 6 - Gestión de Ticket\mantisbt\.gitignore
 .env
 
 # Archivos de configuración sensibles
-config/config_inc.php
+
 
 # Dependencias
 vendor/
@@ -15,3 +15,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Carpetas
+storage/

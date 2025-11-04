@@ -1,46 +1,25 @@
-networks:
-  mantis-network:
-    name: mantis-network
-    driver: bridge
-
 services:
   mantisbt:
     image: xlrl/mantisbt:latest
     container_name: mantisbt
     env_file: .env
     environment:
-      MANTIS_ENABLE_ADMIN: 1
-      MANTIS_DB_TYPE: mysqli
-      MANTIS_DB_HOST: mysql
-      MANTIS_DB_NAME: ${MYSQL_DATABASE}
-      MANTIS_DB_USER: ${MYSQL_USER}
-      MANTIS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      MANTIS_DB_HOST: ${DB_HOST}
+      MANTIS_DB_PORT: ${PGSQL_DB_PORT}
+      MANTIS_DB_NAME: ${PGSQL_DATABASE}
+      MANTIS_DB_USER: ${PGSQL_USER}
+      MANTIS_DB_PASSWORD: ${PGSQL_PASSWORD}
+      MANTIS_CRYPTO_MASTER_SALT: ${CRYPTO_SALT}
+      MANTIS_TIMEZONE: ${TIMEZONE}
+      SMTP_USER: ${SMTP_EMAIL}
+      SMTP_PASS: ${SMTP_PASSW}
+      APP_URL: ${APP_URL}
     ports:
       - "80:80"
-    depends_on:
-      - mysql
-    networks:
-      - mantis-network
     volumes:
-      - ./config:/var/www/html/config
-      # - ./custom:/var/www/html/custom
-      # - ./plugins:/var/www/html/plugins
-      # - ./files:/var/www/html/files
+      - ./config/config_inc.php:/var/www/html/config/config_inc.php:ro
+      - mantis_data:/var/www/html
     restart: always
 
-  mysql:
-    image: "mysql"
-    container_name: mysqldb
-    restart: "always"
-    volumes:
-      - "./storage/mysql:/var/lib/mysql"
-    env_file: .env
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    networks:
-      - mantis-network
-    expose:
-      - ${MYSQL_DB_PORT}
+volumes:
+  mantis_data:
